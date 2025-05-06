@@ -1,14 +1,4 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>bisey 2</title>
-  <link rel="stylesheet" href="./style.css">
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -341,11 +331,11 @@
       const div = document.createElement("div");
       div.className = "producto";
       div.innerHTML = `
-        <img src="₡{prod.imagen}" alt="₡{prod.nombre}">
+        <img src="${prod.imagen}" alt="${prod.nombre}">
         <h3>${prod.nombre}</h3>
         <p>${prod.descripcion}</p>
         <p><strong>₡${prod.precio.toFixed(2)}</strong></p>
-        <a href="#" onclick="comprarPorWhatsApp('₡{prod.nombre}', ₡{prod.precio}, this)">
+        <a href="#" onclick="comprarPorWhatsApp('${prod.nombre}', ${prod.precio}, this)">
           <button>Comprar por WhatsApp</button>
         </a>
       `;
@@ -371,13 +361,13 @@
     let total = 0;
     carrito.forEach(item => {
       const subtotal = item.precio * item.cantidad;
-      mensaje += `₡{item.nombre} - ₡{item.moneda}₡{item.precio} x ₡{item.cantidad} = ₡{item.moneda}₡{subtotal.toFixed(2)}\n`;
+      mensaje += `${item.nombre} - ${item.moneda}${item.precio} x ${item.cantidad} = ${item.moneda}${subtotal.toFixed(2)}\n`;
       total += subtotal;
     });
     mensaje += `\nTotal: CRC₡{total.toFixed(2)}\n`;
     mensaje += "Por favor, indícame cómo completar el pago.";
     const numeroWhatsApp = "50687092702";
-    const url = `https://wa.me/₡{numeroWhatsApp}?text=₡{encodeURIComponent(mensaje)}`;
+    const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }
 
@@ -389,7 +379,7 @@
       const subtotal = item.precio * item.cantidad;
       total += subtotal;
       const li = document.createElement("li");
-      li.textContent = `₡{item.nombre} - ₡{item.moneda}${item.precio} x ₡{item.cantidad} = ₡{item.moneda}₡{subtotal.toFixed(2)}`;
+      li.textContent = `${item.nombre} - ${item.moneda}${item.precio} x ${item.cantidad} = ${item.moneda}${subtotal.toFixed(2)}`;
       lista.appendChild(li);
     });
     document.getElementById("total").textContent = total.toFixed(2);
@@ -403,10 +393,5 @@
     document.getElementById("nueva-oferta").value = ofertaTexto;
   };
 </script>
-</body>
-</html>
-<!-- partial -->
-  <script  src="./script.js"></script>
-
 </body>
 </html>
