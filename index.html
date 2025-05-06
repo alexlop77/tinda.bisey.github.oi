@@ -179,27 +179,27 @@
 <!-- HEADER -->
 <header>
   <h1>Tienda Bisey</h1>
-  <p>Todo para que resaltes tu Brillo, estilo y bienestar</p>
+  <p>Brilla con estilo y bienestar</p>
   <nav>
     <ul>
       <li><a href="#catalogo">Catálogo</a></li>
       <li><a href="#ofertas">Ofertas</a></li>
       <li><a href="#contacto">Contacto</a></li>
-      <li><a href="#agregar">Agregar Producto / Modificar Oferta</a></li>
+      <li><a href="#agregar">Agregar Producto</a></li>
     </ul>
   </nav>
 </header>
-<!-- AGREGAR PRODUCTO Y MODIFICAR OFERTA -->
+<!-- AGREGAR PRODUCTO (oculto hasta iniciar sesión) -->
 <section id="agregar" hidden>
   <h2>Agregar Nuevo Producto</h2>
   <div class="agregar-producto">
     <label>Categoría:</label>
     <select id="categoria">
       <option value="joyeria">Joyería</option>
-      <option value="seytu">Seytu</option>
-      <option value="calzado">Calzado</option>
       <option value="ropa">Ropa</option>
       <option value="bienestar">Bienestar</option>
+      <option value="calzado">Calzado</option>
+      <option value="seytu">Seytu</option>
     </select>
     <label>Nombre:</label>
     <input type="text" id="nombre" />
@@ -211,24 +211,15 @@
     <input type="file" id="imagen" accept="image/*" />
     <button onclick="agregarProducto()">Guardar Producto</button>
   </div>
-
-  <h2>Modificar Oferta del Día</h2>
-  <div class="agregar-producto">
-    <label>Nueva Oferta:</label>
-    <textarea id="nueva-oferta"></textarea>
-    <button onclick="guardarOferta()">Actualizar Oferta</button>
-  </div>
-
-  <button onclick="ocultarFormulario()">Cerrar</button>
 </section>
 <!-- FILTRO POR CATEGORIA -->
 <div class="categorias-buttons">
   <button onclick="filtrarCategoria('')">Todas</button>
   <button onclick="filtrarCategoria('joyeria')">Joyería</button>
-  <button onclick="filtrarCategoria('seytu')">Seytu</button>
-  <button onclick="filtrarCategoria('calzado')">Calzado</button>
   <button onclick="filtrarCategoria('ropa')">Ropa</button>
   <button onclick="filtrarCategoria('bienestar')">Bienestar</button>
+  <button onclick="filtrarCategoria('calzado')">Calzado</button>
+  <button onclick="filtrarCategoria('seytu')">Seytu</button>
 </div>
 <!-- CATÁLOGO -->
 <section id="catalogo">
@@ -238,7 +229,7 @@
 <!-- OFERTAS -->
 <section id="ofertas">
   <h2>Ofertas del día</h2>
-  <p><strong id="texto-oferta">¡Zapatos Divine 30% de descuento solo hoy!</strong></p>
+  <p><strong>¡Zapatos Divine 30% de descuento solo hoy!</strong></p>
 </section>
 <!-- CARRITO -->
 <section id="carrito">
@@ -260,15 +251,15 @@
   <p>&copy; 2025 Tienda Bisey</p>
 </footer>
 <script>
+  // Verificar si hay productos almacenados en localStorage
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
   let productos = JSON.parse(localStorage.getItem("productos")) || [];
-  let ofertaTexto = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
 
   function iniciarSesion() {
     const pass = document.getElementById("contrasena").value;
     if (pass === "admin123") {
       document.getElementById("agregar").hidden = false;
-      alert("Inicio de sesión exitoso. Ahora puedes agregar productos o modificar la oferta.");
+      alert("Inicio de sesión exitoso. Ahora puedes agregar productos.");
     } else {
       alert("Contraseña incorrecta");
     }
@@ -290,28 +281,11 @@
     reader.onload = function () {
       const producto = { categoria, nombre, descripcion, precio, imagen: reader.result };
       productos.push(producto);
-      localStorage.setItem("productos", JSON.stringify(productos));
+      localStorage.setItem("productos", JSON.stringify(productos)); // Guardar en localStorage
       renderizarProductos();
       alert("Producto agregado!");
     };
     reader.readAsDataURL(fileInput.files[0]);
-  }
-
-  function guardarOferta() {
-    const nuevaOferta = document.getElementById("nueva-oferta").value;
-    if (!nuevaOferta.trim()) {
-      alert("Por favor ingresa el texto de la nueva oferta.");
-      return;
-    }
-    localStorage.setItem("oferta", nuevaOferta);
-    ofertaTexto = nuevaOferta;
-    document.getElementById("texto-oferta").textContent = nuevaOferta;
-    alert("Oferta actualizada correctamente.");
-  }
-
-  function ocultarFormulario() {
-    document.getElementById("agregar").hidden = true;
-    document.getElementById("contrasena").value = ""; // Limpiar campo contraseña
   }
 
   function filtrarCategoria(categoria) {
@@ -319,7 +293,7 @@
     if (categoria === "") {
       document.querySelector(".categorias-buttons button").classList.add("active");
     } else {
-      document.querySelector(`[onclick="filtrarCategoria('₡{categoria}')"]`).classList.add("active");
+      document.querySelector(`[onclick="filtrarCategoria('${categoria}')"]`).classList.add("active");
     }
     renderizarProductos(productos.filter(p => p.categoria === categoria || categoria === ""));
   }
@@ -348,7 +322,7 @@
     const moneda = "₡";
     const item = { nombre, precio, cantidad, moneda };
     carrito.push(item);
-    localStorage.setItem("carrito", JSON.stringify(carrito));
+    localStorage.setItem("carrito", JSON.stringify(carrito)); // Guardar en localStorage
     actualizarCarrito();
   }
 
@@ -364,7 +338,7 @@
       mensaje += `${item.nombre} - ${item.moneda}${item.precio} x ${item.cantidad} = ${item.moneda}${subtotal.toFixed(2)}\n`;
       total += subtotal;
     });
-    mensaje += `\nTotal: CRC₡{total.toFixed(2)}\n`;
+    mensaje += `\nTotal: CRC${total.toFixed(2)}\n`;
     mensaje += "Por favor, indícame cómo completar el pago.";
     const numeroWhatsApp = "50687092702";
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
@@ -389,8 +363,6 @@
   window.onload = function () {
     renderizarProductos();
     actualizarCarrito();
-    document.getElementById("texto-oferta").textContent = ofertaTexto;
-    document.getElementById("nueva-oferta").value = ofertaTexto;
   };
 </script>
 </body>
