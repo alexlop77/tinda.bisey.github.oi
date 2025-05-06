@@ -1,0 +1,129 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+header {
+  background-color: #ff66cc;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0 0;
+}
+nav ul li {
+  display: inline;
+  margin: 0 10px;
+}
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+section {
+  padding: 40px;
+  max-width: 1000px;
+  margin: auto;
+}
+.productos {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+.producto {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  width: 250px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.producto img {
+  max-width: 100%;
+  height: auto;
+}
+.producto h3 {
+  margin-top: 10px;
+}
+.producto p {
+  margin: 5px 0;
+}
+.producto button {
+  background-color: #25d366;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+#carrito {
+  background-color: #fff3cd;
+}
+#lista-carrito {
+  list-style: none;
+  padding-left: 0;
+}
+#lista-carrito li {
+  margin: 5px 0;
+}
+#contacto a {
+  display: inline-block;
+  margin-top: 10px;
+  background-color: #25d366;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+}
+.btn-whatsapp {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 2em;
+  text-decoration: none;
+  background-color: #25d366;
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #eee;
+  color: #333;
+}
+.login-form, .agregar-producto {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.login-form input, .agregar-producto input, .agregar-producto select, .agregar-producto textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+}
+.categorias-buttons {
+  text-align: center;
+  margin: 20px 0;
+}
+.categorias-buttons button {
+  margin: 5px;
+  padding: 10px 15px;
+  background-color: #ccc;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.categorias-buttons button.active {
+  background-color: #c2185b;
+  color: white;
+}

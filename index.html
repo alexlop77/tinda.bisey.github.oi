@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>bisey 2</title>
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tienda Bisey</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    header {
+      background-color: #ff66cc;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 10px 0 0;
+    }
+    nav ul li {
+      display: inline;
+      margin: 0 10px;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    section {
+      padding: 40px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .productos {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+    .producto {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 15px;
+      width: 250px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .producto img {
+      max-width: 100%;
+      height: auto;
+    }
+    .producto h3 {
+      margin-top: 10px;
+    }
+    .producto p {
+      margin: 5px 0;
+    }
+    .producto button {
+      background-color: #25d366;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    #carrito {
+      background-color: #fff3cd;
+    }
+    #lista-carrito {
+      list-style: none;
+      padding-left: 0;
+    }
+    #lista-carrito li {
+      margin: 5px 0;
+    }
+    #contacto a {
+      display: inline-block;
+      margin-top: 10px;
+      background-color: #25d366;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .btn-whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      font-size: 2em;
+      text-decoration: none;
+      background-color: #25d366;
+      color: white;
+      padding: 15px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #eee;
+      color: #333;
+    }
+    /* Ocultar secciones */
+    [hidden] {
+      display: none !important;
+    }
+    /* Estilo del formulario de login y nuevo producto */
+    .login-form {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .login-form input {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    .agregar-producto {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .agregar-producto input,
+    .agregar-producto select,
+    .agregar-producto textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    .agregar-producto label {
+      font-weight: bold;
+    }
+    .agregar-producto button {
+      background-color: #c2185b;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .categorias-buttons {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .categorias-buttons button {
+      margin: 5px;
+      padding: 10px 15px;
+      background-color: #ccc;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .categorias-buttons button.active {
+      background-color: #c2185b;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<!-- LOGIN -->
+<section id="login-section">
+  <div class="login-form">
+    <h2>Iniciar Sesión (Admin)</h2>
+    <input type="password" id="contrasena" placeholder="Contraseña"/>
+    <button onclick="iniciarSesion()">Ingresar</button>
+  </div>
+</section>
+<!-- HEADER -->
+<header>
+  <h1>Tienda Bisey</h1>
+  <p>Todo para que resaltes tu Brillo, estilo y bienestar</p>
+  <nav>
+    <ul>
+      <li><a href="#catalogo">Catálogo</a></li>
+      <li><a href="#ofertas">Ofertas</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="#agregar">Agregar Producto / Modificar Oferta</a></li>
+    </ul>
+  </nav>
+</header>
+<!-- AGREGAR PRODUCTO Y MODIFICAR OFERTA -->
+<section id="agregar" hidden>
+  <h2>Agregar Nuevo Producto</h2>
+  <div class="agregar-producto">
+    <label>Categoría:</label>
+    <select id="categoria">
+      <option value="joyeria">Joyería</option>
+      <option value="seytu">Seytu</option>
+      <option value="calzado">Calzado</option>
+      <option value="ropa">Ropa</option>
+      <option value="bienestar">Bienestar</option>
+    </select>
+    <label>Nombre:</label>
+    <input type="text" id="nombre" />
+    <label>Descripción:</label>
+    <textarea id="descripcion"></textarea>
+    <label>Precio (CRC):</label>
+    <input type="number" id="precio" step="0.01"/>
+    <label>Imagen:</label>
+    <input type="file" id="imagen" accept="image/*" />
+    <button onclick="agregarProducto()">Guardar Producto</button>
+  </div>
+
+  <h2>Modificar Oferta del Día</h2>
+  <div class="agregar-producto">
+    <label>Nueva Oferta:</label>
+    <textarea id="nueva-oferta"></textarea>
+    <button onclick="guardarOferta()">Actualizar Oferta</button>
+  </div>
+
+  <button onclick="ocultarFormulario()">Cerrar</button>
+</section>
+<!-- FILTRO POR CATEGORIA -->
+<div class="categorias-buttons">
+  <button onclick="filtrarCategoria('')">Todas</button>
+  <button onclick="filtrarCategoria('joyeria')">Joyería</button>
+  <button onclick="filtrarCategoria('seytu')">Seytu</button>
+  <button onclick="filtrarCategoria('calzado')">Calzado</button>
+  <button onclick="filtrarCategoria('ropa')">Ropa</button>
+  <button onclick="filtrarCategoria('bienestar')">Bienestar</button>
+</div>
+<!-- CATÁLOGO -->
+<section id="catalogo">
+  <h2>Catálogo</h2>
+  <div class="productos" id="lista-productos"></div>
+</section>
+<!-- OFERTAS -->
+<section id="ofertas">
+  <h2>Ofertas del día</h2>
+  <p><strong id="texto-oferta">¡Zapatos Divine 30% de descuento solo hoy!</strong></p>
+</section>
+<!-- CARRITO -->
+<section id="carrito">
+  <h2>Carrito de compras</h2>
+  <ul id="lista-carrito"></ul>
+  <p>Total: ₡<span id="total">0.00</span></p>
+  <button onclick="confirmarCompra()">Confirmar compra por WhatsApp</button>
+</section>
+<!-- CONTACTO -->
+<section id="contacto">
+  <h2>Contáctanos</h2>
+  <p>Haz tu pedido directo por WhatsApp:</p>
+  <a href="https://wa.me/c/50687092702" target="_blank">Enviar mensaje</a>
+</section>
+<!-- BOTÓN WHATSAPP -->
+<a href="https://wa.me/50687092702" class="btn-whatsapp" target="_blank">💬</a>
+<!-- FOOTER -->
+<footer>
+  <p>&copy; 2025 Tienda Bisey</p>
+</footer>
+<script>
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  let productos = JSON.parse(localStorage.getItem("productos")) || [];
+  let ofertaTexto = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
+
+  function iniciarSesion() {
+    const pass = document.getElementById("contrasena").value;
+    if (pass === "admin123") {
+      document.getElementById("agregar").hidden = false;
+      alert("Inicio de sesión exitoso. Ahora puedes agregar productos o modificar la oferta.");
+    } else {
+      alert("Contraseña incorrecta");
+    }
+  }
+
+  function agregarProducto() {
+    const categoria = document.getElementById("categoria").value;
+    const nombre = document.getElementById("nombre").value;
+    const descripcion = document.getElementById("descripcion").value;
+    const precio = parseFloat(document.getElementById("precio").value);
+    const fileInput = document.getElementById("imagen");
+
+    if (!fileInput.files.length) {
+      alert("Por favor selecciona una imagen.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function () {
+      const producto = { categoria, nombre, descripcion, precio, imagen: reader.result };
+      productos.push(producto);
+      localStorage.setItem("productos", JSON.stringify(productos));
+      renderizarProductos();
+      alert("Producto agregado!");
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+
+  function guardarOferta() {
+    const nuevaOferta = document.getElementById("nueva-oferta").value;
+    if (!nuevaOferta.trim()) {
+      alert("Por favor ingresa el texto de la nueva oferta.");
+      return;
+    }
+    localStorage.setItem("oferta", nuevaOferta);
+    ofertaTexto = nuevaOferta;
+    document.getElementById("texto-oferta").textContent = nuevaOferta;
+    alert("Oferta actualizada correctamente.");
+  }
+
+  function ocultarFormulario() {
+    document.getElementById("agregar").hidden = true;
+    document.getElementById("contrasena").value = ""; // Limpiar campo contraseña
+  }
+
+  function filtrarCategoria(categoria) {
+    document.querySelectorAll(".categorias-buttons button").forEach(btn => btn.classList.remove("active"));
+    if (categoria === "") {
+      document.querySelector(".categorias-buttons button").classList.add("active");
+    } else {
+      document.querySelector(`[onclick="filtrarCategoria('₡{categoria}')"]`).classList.add("active");
+    }
+    renderizarProductos(productos.filter(p => p.categoria === categoria || categoria === ""));
+  }
+
+  function renderizarProductos(lista = productos) {
+    const contenedor = document.getElementById("lista-productos");
+    contenedor.innerHTML = "";
+    lista.forEach((prod, index) => {
+      const div = document.createElement("div");
+      div.className = "producto";
+      div.innerHTML = `
+        <img src="₡{prod.imagen}" alt="₡{prod.nombre}">
+        <h3>${prod.nombre}</h3>
+        <p>${prod.descripcion}</p>
+        <p><strong>₡${prod.precio.toFixed(2)}</strong></p>
+        <a href="#" onclick="comprarPorWhatsApp('₡{prod.nombre}', ₡{prod.precio}, this)">
+          <button>Comprar por WhatsApp</button>
+        </a>
+      `;
+      contenedor.appendChild(div);
+    });
+  }
+
+  function comprarPorWhatsApp(nombre, precio, elemento) {
+    const cantidad = 1;
+    const moneda = "₡";
+    const item = { nombre, precio, cantidad, moneda };
+    carrito.push(item);
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+    actualizarCarrito();
+  }
+
+  function confirmarCompra() {
+    if (carrito.length === 0) {
+      alert("Tu carrito está vacío.");
+      return;
+    }
+    let mensaje = "Hola, quiero hacer una compra:\n";
+    let total = 0;
+    carrito.forEach(item => {
+      const subtotal = item.precio * item.cantidad;
+      mensaje += `₡{item.nombre} - ₡{item.moneda}₡{item.precio} x ₡{item.cantidad} = ₡{item.moneda}₡{subtotal.toFixed(2)}\n`;
+      total += subtotal;
+    });
+    mensaje += `\nTotal: CRC₡{total.toFixed(2)}\n`;
+    mensaje += "Por favor, indícame cómo completar el pago.";
+    const numeroWhatsApp = "50687092702";
+    const url = `https://wa.me/₡{numeroWhatsApp}?text=₡{encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  }
+
+  function actualizarCarrito() {
+    const lista = document.getElementById("lista-carrito");
+    lista.innerHTML = "";
+    let total = 0;
+    carrito.forEach((item, index) => {
+      const subtotal = item.precio * item.cantidad;
+      total += subtotal;
+      const li = document.createElement("li");
+      li.textContent = `₡{item.nombre} - ₡{item.moneda}${item.precio} x ₡{item.cantidad} = ₡{item.moneda}₡{subtotal.toFixed(2)}`;
+      lista.appendChild(li);
+    });
+    document.getElementById("total").textContent = total.toFixed(2);
+  }
+
+  // Cargar productos al inicio
+  window.onload = function () {
+    renderizarProductos();
+    actualizarCarrito();
+    document.getElementById("texto-oferta").textContent = ofertaTexto;
+    document.getElementById("nueva-oferta").value = ofertaTexto;
+  };
+</script>
+</body>
+</html>
+<!-- partial -->
+  <script  src="./script.js"></script>
+
+</body>
+</html>
