@@ -67,6 +67,10 @@
       padding: 10px 15px;
       cursor: pointer;
       border-radius: 5px;
+      margin: 5px;
+    }
+    .producto .eliminar-btn {
+      background-color: #e53935;
     }
     #carrito {
       background-color: #fff3cd;
@@ -185,11 +189,11 @@
       <li><a href="#catalogo">Catálogo</a></li>
       <li><a href="#ofertas">Ofertas</a></li>
       <li><a href="#contacto">Contacto</a></li>
-      <li><a href="#agregar">Agregar Producto</a></li>
+      <li><a href="#agregar">Agregar Producto / Modificar Oferta</a></li>
     </ul>
   </nav>
 </header>
-<!-- AGREGAR PRODUCTO (oculto hasta iniciar sesión) -->
+<!-- AGREGAR PRODUCTO Y MODIFICAR OFERTA -->
 <section id="agregar" hidden>
   <h2>Agregar Nuevo Producto</h2>
   <div class="agregar-producto">
@@ -211,6 +215,15 @@
     <input type="file" id="imagen" accept="image/*" />
     <button onclick="agregarProducto()">Guardar Producto</button>
   </div>
+
+  <h2>Modificar Oferta del Día</h2>
+  <div class="agregar-producto">
+    <label>Nueva Oferta:</label>
+    <textarea id="nueva-oferta"></textarea>
+    <button onclick="guardarOferta()">Actualizar Oferta</button>
+  </div>
+
+  <button onclick="ocultarFormulario()">Cerrar</button>
 </section>
 <!-- FILTRO POR CATEGORIA -->
 <div class="categorias-buttons">
@@ -229,7 +242,7 @@
 <!-- OFERTAS -->
 <section id="ofertas">
   <h2>Ofertas del día</h2>
-  <p><strong>¡Zapatos Divine 30% de descuento solo hoy!</strong></p>
+  <p><strong id="texto-oferta">¡Zapatos Divine 30% de descuento solo hoy!</strong></p>
 </section>
 <!-- CARRITO -->
 <section id="carrito">
@@ -251,18 +264,34 @@
   <p>&copy; 2025 Tienda Bisey</p>
 </footer>
 <script>
-  // Verificar si hay productos almacenados en localStorage
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
   let productos = JSON.parse(localStorage.getItem("productos")) || [];
+  let ofertaTexto = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
 
   function iniciarSesion() {
     const pass = document.getElementById("contrasena").value;
     if (pass === "admin123") {
       document.getElementById("agregar").hidden = false;
-      alert("Inicio de sesión exitoso. Ahora puedes agregar productos.");
+      mostrarBotonesEdicion();
+      alert("Inicio de sesión exitoso. Ahora puedes agregar productos o modificar la oferta.");
     } else {
       alert("Contraseña incorrecta");
     }
+  }
+
+  function mostrarBotonesEdicion() {
+    renderizarProductos();
+  }
+
+  function ocultarFormulario() {
+    document.getElementById("agregar").hidden = true;
+    document.getElementById("contrasena").value = "";
+    ocultarBotonesEdicion();
+  }
+
+  function ocultarBotonesEdicion() {
+    const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
+    botonesEditar.forEach(btn => btn.style.display = "none");
   }
 
   function agregarProducto() {
@@ -281,11 +310,78 @@
     reader.onload = function () {
       const producto = { categoria, nombre, descripcion, precio, imagen: reader.result };
       productos.push(producto);
-      localStorage.setItem("productos", JSON.stringify(productos)); // Guardar en localStorage
+      localStorage.setItem("productos", JSON.stringify(productos));
       renderizarProductos();
       alert("Producto agregado!");
     };
     reader.readAsDataURL(fileInput.files[0]);
+  }
+
+  function guardarOferta() {
+    const nuevaOferta = document.getElementById("nueva-oferta").value;
+    if (!nuevaOferta.trim()) {
+      alert("Por favor ingresa el texto de la nueva oferta.");
+      return;
+    }
+    localStorage.setItem("oferta", nuevaOferta);
+    ofertaTexto = nuevaOferta;
+    document.getElementById("texto-oferta").textContent = nuevaOferta;
+    alert("Oferta actualizada correctamente.");
+  }
+
+  function editarProducto(index) {
+    const prod = productos[index];
+    const nuevaCategoria = prompt("Editar categoría:", prod.categoria);
+    const nuevoNombre = prompt("Editar nombre:", prod.nombre);
+    const nuevaDescripcion = prompt("Editar descripción:", prod.descripcion);
+    const nuevoPrecio = parseFloat(prompt("Editar precio (CRC):", prod.precio));
+
+    if (!nuevaCategoria || !nuevoNombre || isNaN(nuevoPrecio)) {
+      alert("Datos inválidos.");
+      return;
+    }
+
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.onchange = function () {
+      if (fileInput.files.length > 0) {
+        const reader = new FileReader();
+        reader.onload = function () {
+          productos[index] = {
+            categoria: nuevaCategoria,
+            nombre: nuevoNombre,
+            descripcion: nuevaDescripcion,
+            precio: nuevoPrecio,
+            imagen: reader.result
+          };
+          localStorage.setItem("productos", JSON.stringify(productos));
+          renderizarProductos();
+          alert("Producto actualizado correctamente.");
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        productos[index] = {
+          categoria: nuevaCategoria,
+          nombre: nuevoNombre,
+          descripcion: nuevaDescripcion,
+          precio: nuevoPrecio,
+          imagen: prod.imagen
+        };
+        localStorage.setItem("productos", JSON.stringify(productos));
+        renderizarProductos();
+        alert("Producto actualizado correctamente (sin cambiar la imagen).");
+      }
+    };
+    fileInput.click();
+  }
+
+  function eliminarProducto(index) {
+    if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+      productos.splice(index, 1);
+      localStorage.setItem("productos", JSON.stringify(productos));
+      renderizarProductos();
+    }
   }
 
   function filtrarCategoria(categoria) {
@@ -309,6 +405,8 @@
         <h3>${prod.nombre}</h3>
         <p>${prod.descripcion}</p>
         <p><strong>₡${prod.precio.toFixed(2)}</strong></p>
+        <button class="editar-btn" onclick="editarProducto(${index})">Editar</button>
+        <button class="eliminar-btn" onclick="eliminarProducto(${index})">Eliminar</button>
         <a href="#" onclick="comprarPorWhatsApp('${prod.nombre}', ${prod.precio}, this)">
           <button>Comprar por WhatsApp</button>
         </a>
@@ -322,7 +420,7 @@
     const moneda = "₡";
     const item = { nombre, precio, cantidad, moneda };
     carrito.push(item);
-    localStorage.setItem("carrito", JSON.stringify(carrito)); // Guardar en localStorage
+    localStorage.setItem("carrito", JSON.stringify(carrito));
     actualizarCarrito();
   }
 
@@ -363,6 +461,8 @@
   window.onload = function () {
     renderizarProductos();
     actualizarCarrito();
+    document.getElementById("texto-oferta").textContent = ofertaTexto;
+    document.getElementById("nueva-oferta").value = ofertaTexto;
   };
 </script>
 </body>
