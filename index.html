@@ -1,4 +1,4 @@
-```html
+````html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -70,8 +70,9 @@
       border-radius: 5px;
       margin: 5px;
     }
+    .producto .editar-btn,
     .producto .eliminar-btn {
-      background-color: #e53935;
+      display: none; /* Ocultos por defecto */
     }
     #carrito {
       background-color: #fff3cd;
@@ -278,6 +279,8 @@
   }
   function mostrarBotonesEdicion() {
     renderizarProductos();
+    const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
+    botonesEditar.forEach(btn => btn.style.display = "");
   }
   function ocultarFormulario() {
     document.getElementById("agregar").hidden = true;
@@ -451,6 +454,8 @@
     // Mostrar oferta actual
     document.getElementById("texto-oferta").textContent = ofertaTexto;
     document.getElementById("nueva-oferta").value = ofertaTexto;
+    // Asegurar que los botones estén ocultos al cargar
+    ocultarBotonesEdicion();
   };
 </script>
 </body>
