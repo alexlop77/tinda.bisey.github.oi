@@ -70,8 +70,9 @@
       border-radius: 5px;
       margin: 5px;
     }
+    .producto .editar-btn,
     .producto .eliminar-btn {
-      background-color: #e53935;
+      display: none; /* Ocultos por defecto */
     }
     #carrito {
       background-color: #fff3cd;
@@ -194,10 +195,6 @@
     </ul>
   </nav>
 </header>
-<!-- BOTÓN DE ACTUALIZACIÓN -->
-<div style="text-align:center; margin: 20px;">
-  <button onclick="actualizarProductos()" style="background-color: #4CAF50; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 5px; cursor: pointer;">ACTUALIZAR PRODUCTOS EN LA PÁGINA</button>
-</div>
 <!-- AGREGAR PRODUCTO Y MODIFICAR OFERTA -->
 <section id="agregar" hidden>
   <h2>Agregar Nuevo Producto</h2>
@@ -267,7 +264,7 @@
   <p>&copy; 2025 Tienda Bisey</p>
 </footer>
 <script>
-  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  let carrito = [];
   let productos = JSON.parse(localStorage.getItem("productos")) || [];
   let ofertaTexto = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
   function iniciarSesion() {
@@ -282,6 +279,8 @@
   }
   function mostrarBotonesEdicion() {
     renderizarProductos();
+    const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
+    botonesEditar.forEach(btn => btn.style.display = "");
   }
   function ocultarFormulario() {
     document.getElementById("agregar").hidden = true;
@@ -408,7 +407,6 @@
     const moneda = "₡";
     const item = { nombre, precio, cantidad, moneda };
     carrito.push(item);
-    localStorage.setItem("carrito", JSON.stringify(carrito));
     actualizarCarrito();
   }
   function confirmarCompra() {
@@ -442,19 +440,21 @@
     });
     document.getElementById("total").textContent = total.toFixed(2);
   }
-  function actualizarProductos() {
-    productos = JSON.parse(localStorage.getItem("productos")) || [];
-    renderizarProductos();
-    alert("Productos actualizados correctamente desde el almacenamiento local.");
-  }
   // Cargar productos al inicio
   window.onload = function () {
-    renderizarProductos();
+    // Limpiar carrito en memoria
+    carrito = [];
+    // Limpiar caja de clave
+    document.getElementById("contrasena")?.setAttribute("value", "");
+    // Actualizar interfaz del carrito
     actualizarCarrito();
+    // Cargar productos desde localStorage
+    productos = JSON.parse(localStorage.getItem("productos")) || [];
+    renderizarProductos();
+    // Mostrar oferta actual
     document.getElementById("texto-oferta").textContent = ofertaTexto;
     document.getElementById("nueva-oferta").value = ofertaTexto;
-  
-  // Asegurar que los botones estén ocultos al cargar
+    // Asegurar que los botones estén ocultos al cargar
     ocultarBotonesEdicion();
   };
 </script>
