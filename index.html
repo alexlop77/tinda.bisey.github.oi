@@ -72,11 +72,6 @@
     }
     .producto .eliminar-btn {
       background-color: #e53935;
-      display: none; /* Oculto por defecto */
-    }
-    .producto .editar-btn {
-      background-color: #c2185b;
-      display: none; /* Oculto por defecto */
     }
     #carrito {
       background-color: #fff3cd;
@@ -268,7 +263,7 @@
   <p>&copy; 2025 Tienda Bisey</p>
 </footer>
 <script>
-  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  let carrito = [];
   let productos = JSON.parse(localStorage.getItem("productos")) || [];
   let ofertaTexto = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
   function iniciarSesion() {
@@ -283,8 +278,6 @@
   }
   function mostrarBotonesEdicion() {
     renderizarProductos();
-    const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
-    botonesEditar.forEach(btn => btn.style.display = "");
   }
   function ocultarFormulario() {
     document.getElementById("agregar").hidden = true;
@@ -411,7 +404,6 @@
     const moneda = "₡";
     const item = { nombre, precio, cantidad, moneda };
     carrito.push(item);
-    localStorage.setItem("carrito", JSON.stringify(carrito));
     actualizarCarrito();
   }
   function confirmarCompra() {
@@ -447,11 +439,18 @@
   }
   // Cargar productos al inicio
   window.onload = function () {
-    renderizarProductos();
+    // Limpiar carrito en memoria
+    carrito = [];
+    // Limpiar caja de clave
+    document.getElementById("contrasena")?.setAttribute("value", "");
+    // Actualizar interfaz del carrito
     actualizarCarrito();
+    // Cargar productos desde localStorage
+    productos = JSON.parse(localStorage.getItem("productos")) || [];
+    renderizarProductos();
+    // Mostrar oferta actual
     document.getElementById("texto-oferta").textContent = ofertaTexto;
     document.getElementById("nueva-oferta").value = ofertaTexto;
-    ocultarBotonesEdicion(); // Ocultar botones al cargar la página
   };
 </script>
 </body>
