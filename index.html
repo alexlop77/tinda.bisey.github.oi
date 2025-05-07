@@ -70,9 +70,8 @@
       border-radius: 5px;
       margin: 5px;
     }
-    .producto .editar-btn,
     .producto .eliminar-btn {
-      display: none; /* Ocultos por defecto */
+      background-color: #e53935;
     }
     #carrito {
       background-color: #fff3cd;
@@ -195,6 +194,10 @@
     </ul>
   </nav>
 </header>
+<!-- BOTÓN DE ACTUALIZACIÓN -->
+<div style="text-align:center; margin: 20px;">
+  <button onclick="actualizarProductos()" style="background-color: #4CAF50; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 5px; cursor: pointer;">ACTUALIZAR PRODUCTOS EN LA PÁGINA</button>
+</div>
 <!-- AGREGAR PRODUCTO Y MODIFICAR OFERTA -->
 <section id="agregar" hidden>
   <h2>Agregar Nuevo Producto</h2>
@@ -242,7 +245,7 @@
 <!-- OFERTAS -->
 <section id="ofertas">
   <h2>Ofertas del día</h2>
-  <p><strong id="texto-oferta"></strong></p>
+  <p><strong id="texto-oferta">¡Zapatos Divine 30% de descuento solo hoy!</strong></p>
 </section>
 <!-- CARRITO -->
 <section id="carrito">
@@ -264,10 +267,9 @@
   <p>&copy; 2025 Tienda Bisey</p>
 </footer>
 <script>
-  let carrito = [];
+  let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
   let productos = JSON.parse(localStorage.getItem("productos")) || [];
   let ofertaTexto = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
-
   function iniciarSesion() {
     const pass = document.getElementById("contrasena").value;
     if (pass === "admin123") {
@@ -278,24 +280,18 @@
       alert("Contraseña incorrecta");
     }
   }
-
   function mostrarBotonesEdicion() {
     renderizarProductos();
-    const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
-    botonesEditar.forEach(btn => btn.style.display = "");
   }
-
   function ocultarFormulario() {
     document.getElementById("agregar").hidden = true;
     document.getElementById("contrasena").value = "";
     ocultarBotonesEdicion();
   }
-
   function ocultarBotonesEdicion() {
     const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
     botonesEditar.forEach(btn => btn.style.display = "none");
   }
-
   function agregarProducto() {
     const categoria = document.getElementById("categoria").value;
     const nombre = document.getElementById("nombre").value;
@@ -316,7 +312,6 @@
     };
     reader.readAsDataURL(fileInput.files[0]);
   }
-
   function guardarOferta() {
     const nuevaOferta = document.getElementById("nueva-oferta").value;
     if (!nuevaOferta.trim()) {
@@ -328,7 +323,6 @@
     document.getElementById("texto-oferta").textContent = nuevaOferta;
     alert("Oferta actualizada correctamente.");
   }
-
   function editarProducto(index) {
     const prod = productos[index];
     const nuevaCategoria = prompt("Editar categoría:", prod.categoria);
@@ -373,7 +367,6 @@
     };
     fileInput.click();
   }
-
   function eliminarProducto(index) {
     if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
       productos.splice(index, 1);
@@ -381,7 +374,6 @@
       renderizarProductos();
     }
   }
-
   function filtrarCategoria(categoria) {
     document.querySelectorAll(".categorias-buttons button").forEach(btn => btn.classList.remove("active"));
     if (categoria === "") {
@@ -391,7 +383,6 @@
     }
     renderizarProductos(productos.filter(p => p.categoria === categoria || categoria === ""));
   }
-
   function renderizarProductos(lista = productos) {
     const contenedor = document.getElementById("lista-productos");
     contenedor.innerHTML = "";
@@ -412,15 +403,14 @@
       contenedor.appendChild(div);
     });
   }
-
   function comprarPorWhatsApp(nombre, precio, elemento) {
     const cantidad = 1;
     const moneda = "₡";
     const item = { nombre, precio, cantidad, moneda };
     carrito.push(item);
+    localStorage.setItem("carrito", JSON.stringify(carrito));
     actualizarCarrito();
   }
-
   function confirmarCompra() {
     if (carrito.length === 0) {
       alert("Tu carrito está vacío.");
@@ -439,7 +429,6 @@
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }
-
   function actualizarCarrito() {
     const lista = document.getElementById("lista-carrito");
     lista.innerHTML = "";
@@ -453,22 +442,19 @@
     });
     document.getElementById("total").textContent = total.toFixed(2);
   }
-
-  // Cargar productos al inicio
-  window.onload = function () {
-    // Limpiar carrito en memoria
-    carrito = [];
-    // Limpiar caja de clave
-    document.getElementById("contrasena")?.setAttribute("value", "");
-    // Actualizar interfaz del carrito
-    actualizarCarrito();
-    // Cargar productos desde localStorage
+  function actualizarProductos() {
     productos = JSON.parse(localStorage.getItem("productos")) || [];
     renderizarProductos();
-    // Mostrar oferta actual
-    document.getElementById("texto-oferta").textContent = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
-    document.getElementById("nueva-oferta").value = localStorage.getItem("oferta") || "";
-    // Asegurar que los botones estén ocultos al cargar
+    alert("Productos actualizados correctamente desde el almacenamiento local.");
+  }
+  // Cargar productos al inicio
+  window.onload = function () {
+    renderizarProductos();
+    actualizarCarrito();
+    document.getElementById("texto-oferta").textContent = ofertaTexto;
+    document.getElementById("nueva-oferta").value = ofertaTexto;
+  
+  // Asegurar que los botones estén ocultos al cargar
     ocultarBotonesEdicion();
   };
 </script>
