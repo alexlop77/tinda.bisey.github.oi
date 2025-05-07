@@ -1,4 +1,4 @@
-````html
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -242,7 +242,7 @@
 <!-- OFERTAS -->
 <section id="ofertas">
   <h2>Ofertas del día</h2>
-  <p><strong id="texto-oferta">¡Zapatos Divine 30% de descuento solo hoy!</strong></p>
+  <p><strong id="texto-oferta"></strong></p>
 </section>
 <!-- CARRITO -->
 <section id="carrito">
@@ -267,6 +267,7 @@
   let carrito = [];
   let productos = JSON.parse(localStorage.getItem("productos")) || [];
   let ofertaTexto = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
+
   function iniciarSesion() {
     const pass = document.getElementById("contrasena").value;
     if (pass === "admin123") {
@@ -277,20 +278,24 @@
       alert("Contraseña incorrecta");
     }
   }
+
   function mostrarBotonesEdicion() {
     renderizarProductos();
     const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
     botonesEditar.forEach(btn => btn.style.display = "");
   }
+
   function ocultarFormulario() {
     document.getElementById("agregar").hidden = true;
     document.getElementById("contrasena").value = "";
     ocultarBotonesEdicion();
   }
+
   function ocultarBotonesEdicion() {
     const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
     botonesEditar.forEach(btn => btn.style.display = "none");
   }
+
   function agregarProducto() {
     const categoria = document.getElementById("categoria").value;
     const nombre = document.getElementById("nombre").value;
@@ -311,6 +316,7 @@
     };
     reader.readAsDataURL(fileInput.files[0]);
   }
+
   function guardarOferta() {
     const nuevaOferta = document.getElementById("nueva-oferta").value;
     if (!nuevaOferta.trim()) {
@@ -322,6 +328,7 @@
     document.getElementById("texto-oferta").textContent = nuevaOferta;
     alert("Oferta actualizada correctamente.");
   }
+
   function editarProducto(index) {
     const prod = productos[index];
     const nuevaCategoria = prompt("Editar categoría:", prod.categoria);
@@ -366,6 +373,7 @@
     };
     fileInput.click();
   }
+
   function eliminarProducto(index) {
     if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
       productos.splice(index, 1);
@@ -373,6 +381,7 @@
       renderizarProductos();
     }
   }
+
   function filtrarCategoria(categoria) {
     document.querySelectorAll(".categorias-buttons button").forEach(btn => btn.classList.remove("active"));
     if (categoria === "") {
@@ -382,6 +391,7 @@
     }
     renderizarProductos(productos.filter(p => p.categoria === categoria || categoria === ""));
   }
+
   function renderizarProductos(lista = productos) {
     const contenedor = document.getElementById("lista-productos");
     contenedor.innerHTML = "";
@@ -402,6 +412,7 @@
       contenedor.appendChild(div);
     });
   }
+
   function comprarPorWhatsApp(nombre, precio, elemento) {
     const cantidad = 1;
     const moneda = "₡";
@@ -409,6 +420,7 @@
     carrito.push(item);
     actualizarCarrito();
   }
+
   function confirmarCompra() {
     if (carrito.length === 0) {
       alert("Tu carrito está vacío.");
@@ -427,6 +439,7 @@
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }
+
   function actualizarCarrito() {
     const lista = document.getElementById("lista-carrito");
     lista.innerHTML = "";
@@ -440,6 +453,7 @@
     });
     document.getElementById("total").textContent = total.toFixed(2);
   }
+
   // Cargar productos al inicio
   window.onload = function () {
     // Limpiar carrito en memoria
@@ -452,8 +466,8 @@
     productos = JSON.parse(localStorage.getItem("productos")) || [];
     renderizarProductos();
     // Mostrar oferta actual
-    document.getElementById("texto-oferta").textContent = ofertaTexto;
-    document.getElementById("nueva-oferta").value = ofertaTexto;
+    document.getElementById("texto-oferta").textContent = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
+    document.getElementById("nueva-oferta").value = localStorage.getItem("oferta") || "";
     // Asegurar que los botones estén ocultos al cargar
     ocultarBotonesEdicion();
   };
