@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -71,6 +72,11 @@
     }
     .producto .eliminar-btn {
       background-color: #e53935;
+      display: none; /* Oculto por defecto */
+    }
+    .producto .editar-btn {
+      background-color: #c2185b;
+      display: none; /* Oculto por defecto */
     }
     #carrito {
       background-color: #fff3cd;
@@ -215,14 +221,12 @@
     <input type="file" id="imagen" accept="image/*" />
     <button onclick="agregarProducto()">Guardar Producto</button>
   </div>
-
   <h2>Modificar Oferta del Día</h2>
   <div class="agregar-producto">
     <label>Nueva Oferta:</label>
     <textarea id="nueva-oferta"></textarea>
     <button onclick="guardarOferta()">Actualizar Oferta</button>
   </div>
-
   <button onclick="ocultarFormulario()">Cerrar</button>
 </section>
 <!-- FILTRO POR CATEGORIA -->
@@ -267,7 +271,6 @@
   let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
   let productos = JSON.parse(localStorage.getItem("productos")) || [];
   let ofertaTexto = localStorage.getItem("oferta") || "¡Zapatos Divine 30% de descuento solo hoy!";
-
   function iniciarSesion() {
     const pass = document.getElementById("contrasena").value;
     if (pass === "admin123") {
@@ -278,34 +281,30 @@
       alert("Contraseña incorrecta");
     }
   }
-
   function mostrarBotonesEdicion() {
     renderizarProductos();
+    const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
+    botonesEditar.forEach(btn => btn.style.display = "");
   }
-
   function ocultarFormulario() {
     document.getElementById("agregar").hidden = true;
     document.getElementById("contrasena").value = "";
     ocultarBotonesEdicion();
   }
-
   function ocultarBotonesEdicion() {
     const botonesEditar = document.querySelectorAll(".editar-btn, .eliminar-btn");
     botonesEditar.forEach(btn => btn.style.display = "none");
   }
-
   function agregarProducto() {
     const categoria = document.getElementById("categoria").value;
     const nombre = document.getElementById("nombre").value;
     const descripcion = document.getElementById("descripcion").value;
     const precio = parseFloat(document.getElementById("precio").value);
     const fileInput = document.getElementById("imagen");
-
     if (!fileInput.files.length) {
       alert("Por favor selecciona una imagen.");
       return;
     }
-
     const reader = new FileReader();
     reader.onload = function () {
       const producto = { categoria, nombre, descripcion, precio, imagen: reader.result };
@@ -316,7 +315,6 @@
     };
     reader.readAsDataURL(fileInput.files[0]);
   }
-
   function guardarOferta() {
     const nuevaOferta = document.getElementById("nueva-oferta").value;
     if (!nuevaOferta.trim()) {
@@ -328,19 +326,16 @@
     document.getElementById("texto-oferta").textContent = nuevaOferta;
     alert("Oferta actualizada correctamente.");
   }
-
   function editarProducto(index) {
     const prod = productos[index];
     const nuevaCategoria = prompt("Editar categoría:", prod.categoria);
     const nuevoNombre = prompt("Editar nombre:", prod.nombre);
     const nuevaDescripcion = prompt("Editar descripción:", prod.descripcion);
     const nuevoPrecio = parseFloat(prompt("Editar precio (CRC):", prod.precio));
-
     if (!nuevaCategoria || !nuevoNombre || isNaN(nuevoPrecio)) {
       alert("Datos inválidos.");
       return;
     }
-
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = "image/*";
@@ -375,7 +370,6 @@
     };
     fileInput.click();
   }
-
   function eliminarProducto(index) {
     if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
       productos.splice(index, 1);
@@ -383,7 +377,6 @@
       renderizarProductos();
     }
   }
-
   function filtrarCategoria(categoria) {
     document.querySelectorAll(".categorias-buttons button").forEach(btn => btn.classList.remove("active"));
     if (categoria === "") {
@@ -393,7 +386,6 @@
     }
     renderizarProductos(productos.filter(p => p.categoria === categoria || categoria === ""));
   }
-
   function renderizarProductos(lista = productos) {
     const contenedor = document.getElementById("lista-productos");
     contenedor.innerHTML = "";
@@ -414,7 +406,6 @@
       contenedor.appendChild(div);
     });
   }
-
   function comprarPorWhatsApp(nombre, precio, elemento) {
     const cantidad = 1;
     const moneda = "₡";
@@ -423,7 +414,6 @@
     localStorage.setItem("carrito", JSON.stringify(carrito));
     actualizarCarrito();
   }
-
   function confirmarCompra() {
     if (carrito.length === 0) {
       alert("Tu carrito está vacío.");
@@ -442,7 +432,6 @@
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }
-
   function actualizarCarrito() {
     const lista = document.getElementById("lista-carrito");
     lista.innerHTML = "";
@@ -456,14 +445,15 @@
     });
     document.getElementById("total").textContent = total.toFixed(2);
   }
-
   // Cargar productos al inicio
   window.onload = function () {
     renderizarProductos();
     actualizarCarrito();
     document.getElementById("texto-oferta").textContent = ofertaTexto;
     document.getElementById("nueva-oferta").value = ofertaTexto;
+    ocultarBotonesEdicion(); // Ocultar botones al cargar la página
   };
 </script>
 </body>
 </html>
+```
